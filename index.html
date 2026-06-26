@@ -63,7 +63,7 @@
 <div class="card">
   <div class="eyebrow">a purple-paper cipher · HERMES · ROOT0</div>
   <h1>The Procession</h1>
-  <p class="sub">Eight voices, eight windows, one clock — and each is a <b>different cipher</b>. Type a word into any box and it is enciphered in that voice's own way: the <b>lyre</b> turns letters into a pentatonic line; the <b>dùndún</b> reads it as gliding Yorùbá tones; the <b>bàtá</b> runs it through ẹ̀nà (the real vowel-echo cipher) and strikes it; the <b>two-tone drum</b> renders it as binary; the <b>ultrasonic</b> flings it past the hearing line as near-ultrasonic FSK; the <b>keystroke</b> leaks it as key-clicks at each char's acoustic fingerprint; the <b>fan</b> hums it off an air-gapped machine as blade-pass FSK; and the <b>adversarial</b> rides it on a 20 kHz carrier — a message only a machine hears. Give each its own word and its own speed, angle &amp; volume — then play them <b>together</b>: a layered cipher, split by sound and style, all through the ternary echo.</p>
+  <p class="sub">Nine voices, nine windows, one clock — and each is a <b>different cipher</b>. Type a word into any box and it is enciphered in that voice's own way: the <b>lyre</b> turns letters into a pentatonic line; the <b>dùndún</b> reads it as gliding Yorùbá tones; the <b>bàtá</b> runs it through ẹ̀nà (the real vowel-echo cipher) and strikes it; the <b>two-tone drum</b> renders it as binary; the <b>ultrasonic</b> flings it past the hearing line as near-ultrasonic FSK; the <b>keystroke</b> leaks it as key-clicks at each char's acoustic fingerprint; the <b>fan</b> hums it off an air-gapped machine as blade-pass FSK; the <b>adversarial</b> rides it on a 20 kHz carrier only a machine hears; and the <b>numbers station</b> reads it as five-digit groups, a pitch per digit. Give each its own word and its own speed, angle &amp; volume — then play them <b>together</b>: a layered cipher, split by sound and style, all through the ternary echo. The whole cipher series, sounding at once.</p>
 
   <div class="masterbar">
     <button class="play" id="play"><span>▶</span> play all</button>
@@ -74,7 +74,7 @@
   <div class="tracks" id="tracks"></div>
 
   <div class="note">
-    <b>what's real.</b> the bàtá's ẹ̀nà cipher (echo each vowel onto a 'g' syllable, copying its tone) is the documented Yorùbá language game; the dùndún reads real Yorùbá tone-marks (à=low · a=mid · á=high); the two-tone (binary) and three-tone (ternary) drums are the Kele &amp; Yorùbá talking-drum codes (Carrington/Gleick, Villepastour). standalone instruments: <a href="https://davidwise01.github.io/talking-drum/">two-tone</a> · <a href="https://davidwise01.github.io/talking-drum-dundun/">dùndún</a> · <a href="https://davidwise01.github.io/talking-drum-bata/">bàtá</a> · <a href="https://davidwise01.github.io/limen-sapphic-carrier/">Sapphic carrier</a> · <a href="https://davidwise01.github.io/cipher-ultrasonic/">ultrasonic</a> · <a href="https://davidwise01.github.io/cipher-steganography/">steganography</a> · <a href="https://davidwise01.github.io/cipher-side-channels/">side-channels</a> · <a href="https://davidwise01.github.io/cipher-air-gap/">air-gap</a> · <a href="https://davidwise01.github.io/cipher-adversarial/">adversarial</a>.
+    <b>what's real.</b> the bàtá's ẹ̀nà cipher (echo each vowel onto a 'g' syllable, copying its tone) is the documented Yorùbá language game; the dùndún reads real Yorùbá tone-marks (à=low · a=mid · á=high); the two-tone (binary) and three-tone (ternary) drums are the Kele &amp; Yorùbá talking-drum codes (Carrington/Gleick, Villepastour). standalone instruments: <a href="https://davidwise01.github.io/talking-drum/">two-tone</a> · <a href="https://davidwise01.github.io/talking-drum-dundun/">dùndún</a> · <a href="https://davidwise01.github.io/talking-drum-bata/">bàtá</a> · <a href="https://davidwise01.github.io/limen-sapphic-carrier/">Sapphic carrier</a> · <a href="https://davidwise01.github.io/cipher-ultrasonic/">ultrasonic</a> · <a href="https://davidwise01.github.io/cipher-steganography/">steganography</a> · <a href="https://davidwise01.github.io/cipher-side-channels/">side-channels</a> · <a href="https://davidwise01.github.io/cipher-air-gap/">air-gap</a> · <a href="https://davidwise01.github.io/cipher-adversarial/">adversarial</a> · <a href="https://davidwise01.github.io/cipher-numbers-stations/">numbers stations</a>.
     <br><b>what's the system.</b> the letter→pitch and vowel→bit mappings, mixing four word-ciphers into one polyrhythmic groove, and the ternary echo (3 voices −/0/+) are ROOT0's composition — a study, not a transcribed ensemble. voices are live Web-Audio synthesis.
   </div>
 </div>
@@ -162,6 +162,13 @@
     var am=ctx.createGain(); am.gain.value=0.5; var depth=ctx.createGain(); depth.gain.value=0.45; bb.connect(depth); depth.connect(am.gain);
     var env=ctx.createGain(); env.gain.setValueAtTime(0.0001,t); env.gain.linearRampToValueAtTime(0.5,t+0.01); env.gain.exponentialRampToValueAtTime(0.0001,t+0.2);
     car.connect(am).connect(env).connect(dest); car.start(t); bb.start(t); car.stop(t+0.22); bb.stop(t+0.22); }
+  // numbers station — a clean shortwave-voice beep, one pitch per digit 0–9 (the OTP groups, read aloud)
+  var DIG10=[220.00,246.94,261.63,293.66,329.63,349.23,392.00,440.00,493.88,523.25];
+  function numbers(digit,t,dest){ var f=DIG10[digit]||330, o=ctx.createOscillator(); o.type="triangle"; o.frequency.value=f;
+    var o2=ctx.createOscillator(); o2.type="sine"; o2.frequency.value=f*2; var g2=ctx.createGain(); g2.gain.value=0.18;
+    var g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.4,t+0.008); g.gain.setValueAtTime(0.4,t+0.12); g.gain.exponentialRampToValueAtTime(0.0001,t+0.2);
+    var bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=f; bp.Q.value=4;
+    o.connect(bp).connect(g).connect(dest); o2.connect(g2); g2.connect(g); o.start(t); o2.start(t); o.stop(t+0.22); o2.stop(t+0.22); }
 
   // ── ciphers (one per voice) ──
   var PENTA=[220.00,261.63,293.66,329.63,392.00];
@@ -199,7 +206,14 @@
       return {events:ev, strip:strip, readout:'fan FSK: <b>'+(bits||'—')+'</b> (1700/2700 rpm → 200/320 Hz)'}; },
     adv:function(w){ var ev=[],strip=[],bits=''; for(var i=0;i<w.length;i++){ var ch=w[i]; if(!/[a-zà-ÿ]/i.test(ch)) continue;
         var hi=isVowel(ch); ev.push({fb:hi?950:600}); bits+=hi?'1':'0'; strip.push({glyph:hi?'1':'0', color:hi?'#b070c8':'#5a3a6a'}); }
-      return {events:ev, strip:strip, readout:'AM @20k (machine-only): <b>'+(bits||'—')+'</b>'}; }
+      return {events:ev, strip:strip, readout:'AM @20k (machine-only): <b>'+(bits||'—')+'</b>'}; },
+    numbers:function(w){ var ev=[],strip=[],dg=[]; var s=w.toUpperCase();
+      for(var i=0;i<s.length;i++){ var ch=s[i], n; if(ch===' ') n=0; else if(ch>='A'&&ch<='Z') n=ch.charCodeAt(0)-64; else continue;
+        var d1=Math.floor(n/10), d2=n%10; dg.push(d1,d2); }
+      while(dg.length%5!==0) dg.push(0);
+      dg.forEach(function(d){ ev.push({digit:d}); strip.push({glyph:String(d), color:'#c8a050'}); });
+      var groups=[]; for(var k=0;k<dg.length;k+=5) groups.push(dg.slice(k,k+5).join(''));
+      return {events:ev, strip:strip, readout:'groups: <b>'+(groups.join(' ')||'—')+'</b> (A=01…Z=26)'}; }
   };
   function mapTones(w){ var r=[]; for(var i=0;i<w.length;i++){ var ch=w[i]; if(!/[a-zà-ÿ]/i.test(ch)) continue; r.push(['L','M','H'][ch.toLowerCase().charCodeAt(0)%3]); } return r.length?r:['M']; }
 
@@ -212,7 +226,8 @@
     {key:'ultra', name:'the Ultrasonic', style:'near-ultrasonic FSK · above the hearing line', color:'#5fb0c0', word:'witness', speed:1.25, pan:-0.7, vol:0.5},
     {key:'leak', name:'the Keystroke', style:'acoustic side-channel · char → key-click', color:'#d07a4f', word:'the secret', speed:1.0, pan:0.6, vol:0.6},
     {key:'airgap', name:'the Fan', style:'air-gap exfil · blade-pass FSK · the silent machine talks', color:'#76b97e', word:'exfiltrate', speed:0.5, pan:-0.25, vol:0.55},
-    {key:'adv', name:'the Adversarial', style:'AM on a 20k carrier · a message only a machine hears', color:'#b070c8', word:'open lock', speed:1.0, pan:0.35, vol:0.6}
+    {key:'adv', name:'the Adversarial', style:'AM on a 20k carrier · a message only a machine hears', color:'#b070c8', word:'open lock', speed:1.0, pan:0.35, vol:0.6},
+    {key:'numbers', name:'the Numbers Station', style:'one-time pad · five-digit groups · a pitch per digit', color:'#c8a050', word:'meet at dawn', speed:1.0, pan:0.0, vol:0.62}
   ];
   function buildChain(tr){ if(tr.gain) return; tr.gain=ctx.createGain(); tr.gain.gain.value=tr.vol;
     var pn=ctx.createStereoPanner?ctx.createStereoPanner():null; if(pn){ pn.pan.value=tr.pan; tr.gain.connect(pn); tr.panNode=pn; pn.connect(master); if(echo) pn.connect(echo.input); }
@@ -226,6 +241,7 @@
     else if(tr.key==='leak') keyclick(ev.freq,t,dest);
     else if(tr.key==='airgap') fan(ev.freq,t,dest);
     else if(tr.key==='adv') adv(ev.fb,t,dest);
+    else if(tr.key==='numbers') numbers(ev.digit,t,dest);
     hl(tr, tr.ptr%tr.events.length); tr.ptr=(tr.ptr+1)%tr.events.length; }
   function trackMs(tr){ return (60/tempo/2)/Math.max(0.1,tr.speed)*1000; }   // 8th-note base ÷ speed
   function startTrack(tr){ stopTrack(tr); if(!tr.on||!tr.events.length) return; tr.ptr=0; tr.last=null; tr.timer=setInterval(function(){ playNote(tr); }, trackMs(tr)); }
