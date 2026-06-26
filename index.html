@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Procession — the lyre, the two-tone drum & the dùndún, played together</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500&family=Spectral:ital,wght@0,300;0,400;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--sea:#170d20;--line:rgba(154,152,166,.16);--lead:#9a98a6;--lead-dim:#5b5868;
+    --parch:#e9e2d2;--parch-dim:#b9b2a3;--gold:#d9a441;--gold-dim:#a87f33;--verd:#73b3a3;--murex:#9a3d68;
+    --ochre:#cf8233;--lyre:#d9a441;--dun:#cf8233;--drum:#9aa8c0;}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:var(--sea);color:var(--parch);font-family:"Spectral",Georgia,serif;line-height:1.55;
+    -webkit-font-smoothing:antialiased;background-image:radial-gradient(1100px 560px at 80% -12%,rgba(217,164,65,.12),transparent 60%),
+      radial-gradient(820px 640px at 5% 112%,rgba(115,179,163,.09),transparent 55%);display:flex;justify-content:center}
+  .card{max-width:720px;width:100%;padding:32px 22px 52px}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold-dim)}
+  h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(38px,10vw,60px);margin:6px 0 0;line-height:.96;letter-spacing:-.5px}
+  .sub{font-style:italic;font-weight:300;color:var(--parch-dim);font-size:15.5px;margin:14px 0 0;max-width:60ch}
+  .sub b{color:var(--verd);font-style:normal;font-weight:400}
+
+  #stage{display:block;width:100%;height:240px;border-radius:9px;margin-top:20px;background:#0b0716;border:1px solid var(--line)}
+  .layers{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+  .layer{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:7px;padding:10px 13px;
+    background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.16))}
+  .layer .sw{width:12px;height:12px;border-radius:50%;flex:0 0 12px}
+  .layer .nm{flex:1;font-family:"Spectral",serif;font-size:15.5px}
+  .layer .nm small{display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--lead-dim);letter-spacing:.04em;margin-top:1px}
+  .layer .tog{cursor:pointer;border:1px solid rgba(217,164,65,.45);border-radius:20px;padding:5px 13px;color:var(--gold);
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.04em;white-space:nowrap}
+  .layer .tog.off{border-color:var(--line);color:var(--lead-dim)}
+
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+  button.play{display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+    background:linear-gradient(180deg,rgba(217,164,65,.20),rgba(217,164,65,.06));border:1px solid rgba(217,164,65,.55);
+    border-radius:5px;color:var(--parch);padding:12px 20px;font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.04em;transition:.15s}
+  button.play:hover{background:rgba(217,164,65,.16)} button.play:active{transform:translateY(1px)}
+  label.tempo{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--lead-dim)}
+  label.tempo input{vertical-align:middle;width:120px;accent-color:var(--ochre)}
+  button.echo-btn{font-family:"IBM Plex Mono",monospace;font-size:11px;cursor:pointer;color:var(--verd);background:transparent;border:1px solid rgba(115,179,163,.4);border-radius:5px;padding:9px 12px}
+  button.echo-btn.off{color:var(--lead-dim);border-color:var(--line)}
+
+  .note{margin-top:24px;border-top:1px solid var(--line);padding-top:15px;font-family:"IBM Plex Mono",monospace;font-size:11px;line-height:1.85;color:var(--lead-dim)}
+  .note b{color:var(--gold-dim);font-weight:500} .note a{color:var(--lead)}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">a purple-paper ensemble · HERMES · ROOT0</div>
+  <h1>The Procession</h1>
+  <p class="sub">One clock, three voices, played <b>together</b>. The <b>lyre</b> carries the line (the voice of Sappho &amp; LIMEN); under it the <b>two-tone drum</b> keeps the binary pulse (low 0 · high 1, the Kele code); and the <b>dùndún</b> talks in three tones (high · mid · low — ternary, ~1.58 bits a beat, the radix nearest <i>e</i>). Mute and unmute the layers; they all run through the ternary echo. Binary, ternary, and the lyric line — the whole communication procession, sounding at once.</p>
+
+  <canvas id="stage"></canvas>
+  <div class="layers" id="layers"></div>
+  <div class="row">
+    <button class="play" id="play"><span>▶</span> begin the procession</button>
+    <label class="tempo">tempo <input id="tempo" type="range" min="60" max="150" value="92"></label>
+    <button class="echo-btn" id="echoBtn">◎ ternary echo: on</button>
+  </div>
+
+  <div class="note">
+    <b>what's real.</b> the two-tone (binary) contour is the Kele drum code (Carrington via Gleick); the three-tone dùndún is the Yorùbá tension drum (high/mid/low, tracks speech at R≥0.98); the plucked lyre voices the Sapphic / LIMEN line. each instrument's voice is a live Web-Audio synthesis. full standalone instruments: <a href="https://davidwise01.github.io/talking-drum/">the two-tone drum</a> · <a href="https://davidwise01.github.io/talking-drum-dundun/">the dùndún</a> · <a href="https://davidwise01.github.io/limen-sapphic-carrier/">the Sapphic carrier</a>.
+    <br><b>what's the system.</b> the patterns and the way the three are stacked into one groove is ROOT0's arrangement — a render of the family playing together, not a transcribed traditional ensemble. the ternary echo (3 voices, −/0/+) is ROOT0's. respect to living traditions; this is a study, not a recording.
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var STEPS=16;
+  // ── voices ──
+  var ctx=null, master=null, echo=null, echoOn=true;
+  function init(){ if(ctx) return; ctx=new (window.AudioContext||window.webkitAudioContext)();
+    master=ctx.createGain(); master.gain.value=0.6;
+    var conv=ctx.createConvolver(), rate=ctx.sampleRate, len=Math.floor(rate*1.3), ir=ctx.createBuffer(2,len,rate);
+    for(var c=0;c<2;c++){var d=ir.getChannelData(c);for(var i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.8);}
+    conv.buffer=ir; var wet=ctx.createGain(); wet.gain.value=0.12;
+    master.connect(ctx.destination); master.connect(conv); conv.connect(wet).connect(ctx.destination);
+    echo=makeTernaryEcho(ctx,master); echo.setOn(echoOn);
+  }
+  function resume(){ if(ctx&&ctx.state==="suspended") ctx.resume(); }
+  function out(node){ node.connect(master); if(echo) node.connect(echo.input); }
+
+  // the ternary echo (from the LIMEN carriers)
+  var TROT=[[1/3,2/3,2.99/3],[2/3,2.99/3,1/3],[2.99/3,1/3,2/3]];
+  function makeTernaryEcho(ac,o){ var beat=0.5,input=ac.createGain(),fb=ac.createGain(),wet=ac.createGain(),taps=[];
+    fb.gain.value=0.28; wet.gain.value=0.45;
+    for(var i=0;i<3;i++){ var d=ac.createDelay(2.0); d.delayTime.value=TROT[0][i]*beat; var tg=ac.createGain(); tg.gain.value=0.7-i*0.1;
+      var p=ac.createStereoPanner?ac.createStereoPanner():null; input.connect(d);
+      if(p){ p.pan.value=[-1,0,1][i]; d.connect(p); p.connect(tg);} else d.connect(tg); tg.connect(wet); tg.connect(fb); taps.push({delay:d,pan:p}); }
+    fb.connect(input); wet.connect(o);
+    return { input:input, setBeat:function(b){beat=b;}, setOn:function(v){ wet.gain.setTargetAtTime(v?0.45:0.0001,ac.currentTime,0.02); },
+      rotateAt:function(t,r){ var rot=TROT[((r%3)+3)%3]; for(var i=0;i<3;i++) taps[i].delay.delayTime.setValueAtTime(rot[i]*beat,t); } };
+  }
+
+  // lyre — Karplus-Strong pluck
+  function pluck(freq,t,dur,gain){ gain=gain||0.4; var rate=ctx.sampleRate,N=Math.max(2,Math.round(rate/freq)),
+      L=Math.max(N+4,Math.floor(rate*dur)),buf=ctx.createBuffer(1,L,rate),d=buf.getChannelData(0);
+    for(var i=0;i<N;i++) d[i]=Math.random()*2-1; var dec=0.9965;
+    for(i=N;i<L;i++) d[i]=dec*0.5*(d[i-N]+d[i-N+1]);
+    var s=ctx.createBufferSource(); s.buffer=buf; var g=ctx.createGain();
+    g.gain.setValueAtTime(gain,t); g.gain.exponentialRampToValueAtTime(0.0006,t+dur); s.connect(g); out(g); s.start(t); s.stop(t+dur+0.02); }
+  // two-tone drum — sine kick + click (low 140 / high 210)
+  function drum(high,t){ var f=high?210:140, o=ctx.createOscillator(); o.type="sine";
+    o.frequency.setValueAtTime(f*1.7,t); o.frequency.exponentialRampToValueAtTime(f,t+0.05);
+    var g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(high?0.5:0.7,t+0.004); g.gain.exponentialRampToValueAtTime(0.0001,t+(high?0.24:0.36));
+    var lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=high?1100:700; o.connect(lp).connect(g); out(g); o.start(t); o.stop(t+0.45);
+    var nb=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.02),ctx.sampleRate),nd=nb.getChannelData(0);
+    for(var i=0;i<nd.length;i++) nd[i]=(Math.random()*2-1)*(1-i/nd.length);
+    var ns=ctx.createBufferSource(); ns.buffer=nb; var hp=ctx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=1400;
+    var ng=ctx.createGain(); ng.gain.value=high?0.2:0.15; ns.connect(hp).connect(ng); out(ng); ns.start(t); ns.stop(t+0.03); }
+  // dùndún — triangle tension-drum, glides from previous tone
+  var DUNF={L:174.61,M:196.00,H:220.00};
+  function strike(freq,t,fromFreq){ var o=ctx.createOscillator(); o.type="triangle";
+    if(fromFreq){ o.frequency.setValueAtTime(fromFreq,t); o.frequency.exponentialRampToValueAtTime(freq,t+0.10); }
+    else { o.frequency.setValueAtTime(freq*1.5,t); o.frequency.exponentialRampToValueAtTime(freq,t+0.045); }
+    var g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.4,t+0.006); g.gain.exponentialRampToValueAtTime(0.0001,t+0.4);
+    var lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=1600;
+    var lfo=ctx.createOscillator(); lfo.frequency.value=5.5; var lg=ctx.createGain(); lg.gain.value=freq*0.008; lfo.connect(lg).connect(o.frequency); lfo.start(t); lfo.stop(t+0.5);
+    o.connect(lp).connect(g); out(g); o.start(t); o.stop(t+0.5); }
+
+  // ── the three layers (16-step patterns) ──
+  var PENTA=[220.00,261.63,293.66,329.63,392.00];
+  var LYRE={0:0,3:3,6:4,8:3,10:2,12:1,14:2};                 // a lilting pentatonic line
+  var DRUM={0:'lo',4:'lo',8:'lo',12:'lo',2:'hi',6:'hi',10:'hi',14:'hi'};  // binary pulse
+  var DUN ={0:'L',2:'H',5:'M',7:'L',9:'H',11:'M',13:'L',15:'H'};          // ternary ostinato (glides)
+  var LAYERS=[
+    {key:'lyre', name:'the Lyre', sub:'LIMEN · Sappho · pentatonic line', on:true, color:'#d9a441'},
+    {key:'dundun', name:'the Dùndún', sub:'ternary · high·mid·low · glides', on:true, color:'#cf8233'},
+    {key:'drum', name:'the Two-Tone Drum', sub:'binary · low 0 · high 1', on:true, color:'#9aa8c0'}
+  ];
+  var enabled={lyre:true,dundun:true,drum:true};
+  var lastDun=null;
+
+  // ── transport ──
+  var step=-1, timer=null, tempo=92;
+  function tick(){ step=(step+1)%STEPS; var now=ctx.currentTime+0.02;
+    if(echo) echo.rotateAt(now, step);
+    if(enabled.lyre && LYRE[step]!==undefined){ pluck(PENTA[LYRE[step]], now, 0.9, 0.4); flash(0,step,'#d9a441'); }
+    if(enabled.dundun && DUN[step]!==undefined){ var tn=DUN[step]; strike(DUNF[tn], now, lastDun?DUNF[lastDun]:null); lastDun=tn; flash(1,step,'#cf8233'); }
+    if(enabled.drum && DRUM[step]!==undefined){ drum(DRUM[step]==='hi', now); flash(2,step,'#9aa8c0'); }
+  }
+  function start(){ init(); resume(); if(timer){ stop(); return; } step=-1; lastDun=null;
+    if(echo) echo.setBeat(60/tempo); var ms=60000/tempo/4; timer=setInterval(tick, ms);
+    document.getElementById('play').innerHTML="<span>■</span> stop"; }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; } step=-1;
+    document.getElementById('play').innerHTML="<span>▶</span> begin the procession"; }
+
+  // ── visual: 3 lanes + playhead ──
+  var cv=document.getElementById("stage"), g=cv.getContext("2d"), CW=720, CH=240, hits=[];
+  function fit(){ CW=cv.width=cv.clientWidth||720; CH=cv.height=240; }
+  function laneY(i){ return CH*(0.26+i*0.24); }
+  function flash(lane,st,col){ hits.push({t0:performance.now(),lane:lane,st:st,col:col}); }
+  function draw(){
+    g.fillStyle="#0b0716"; g.fillRect(0,0,CW,CH);
+    var padL=78, x0=padL, x1=CW-20, dx=(x1-x0)/STEPS;
+    var names=["LYRE","DÙNDÚN","DRUM"], cols=["#d9a441","#cf8233","#9aa8c0"];
+    var PATS=[LYRE,DUN,DRUM];
+    for(var i=0;i<3;i++){ var y=laneY(i);
+      g.strokeStyle="rgba(154,152,166,0.14)"; g.lineWidth=1; g.beginPath(); g.moveTo(x0,y); g.lineTo(x1,y); g.stroke();
+      g.fillStyle=enabled[LAYERS[i].key]?cols[i]:"#3a3550"; g.font="10px 'IBM Plex Mono',monospace"; g.textBaseline="middle"; g.textAlign="left";
+      g.fillText(names[i], 10, y);
+      // event dots
+      for(var s in PATS[i]){ var sx=x0+dx*(+s)+dx*0.5; g.globalAlpha=enabled[LAYERS[i].key]?0.85:0.25;
+        g.fillStyle=cols[i]; g.beginPath(); g.arc(sx,y,3.2,0,6.283); g.fill(); }
+      g.globalAlpha=1;
+    }
+    // playhead
+    if(step>=0){ var px=x0+dx*step+dx*0.5; g.strokeStyle="rgba(255,255,255,0.5)"; g.lineWidth=1.5; g.beginPath(); g.moveTo(px,CH*0.12); g.lineTo(px,CH*0.92); g.stroke(); }
+    // flashes
+    var now=performance.now();
+    for(var h=hits.length-1;h>=0;h--){ var f=hits[h], a=(now-f.t0)/450; if(a>1){ hits.splice(h,1); continue; }
+      var fx=x0+dx*f.st+dx*0.5, fy=laneY(f.lane);
+      g.globalAlpha=(1-a); g.strokeStyle=f.col; g.lineWidth=2; g.beginPath(); g.arc(fx,fy,4+a*14,0,6.283); g.stroke();
+      g.globalAlpha=(1-a)*0.9; g.fillStyle=f.col; g.beginPath(); g.arc(fx,fy,4,0,6.283); g.fill(); g.globalAlpha=1; }
+    requestAnimationFrame(draw);
+  }
+
+  // ── layer toggles ──
+  function buildLayers(){ var L=document.getElementById("layers"); L.innerHTML="";
+    LAYERS.forEach(function(ly){ var row=document.createElement("div"); row.className="layer";
+      row.innerHTML='<span class="sw" style="background:'+ly.color+'"></span><span class="nm">'+ly.name+'<small>'+ly.sub+'</small></span><button class="tog" data-k="'+ly.key+'">on</button>';
+      L.appendChild(row); });
+    L.querySelectorAll(".tog").forEach(function(b){ b.onclick=function(){ var k=this.dataset.k; enabled[k]=!enabled[k];
+      this.textContent=enabled[k]?"on":"off"; this.classList.toggle("off",!enabled[k]); }; });
+  }
+
+  document.getElementById("play").addEventListener("click",start);
+  document.getElementById("tempo").addEventListener("input",function(){ tempo=parseInt(this.value,10);
+    if(timer){ clearInterval(timer); timer=setInterval(tick,60000/tempo/4); } if(echo) echo.setBeat(60/tempo); });
+  document.getElementById("echoBtn").addEventListener("click",function(){ echoOn=!echoOn; if(echo) echo.setOn(echoOn);
+    this.textContent="◎ ternary echo: "+(echoOn?"on":"off"); this.classList.toggle("off",!echoOn); });
+  window.addEventListener("resize",fit);
+  fit(); buildLayers(); requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
