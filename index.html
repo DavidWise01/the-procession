@@ -50,7 +50,7 @@
 <div class="card">
   <div class="eyebrow">a purple-paper ensemble · HERMES · ROOT0</div>
   <h1>The Procession</h1>
-  <p class="sub">One clock, three voices, played <b>together</b>. The <b>lyre</b> carries the line (the voice of Sappho &amp; LIMEN); under it the <b>two-tone drum</b> keeps the binary pulse (low 0 · high 1, the Kele code); and the <b>dùndún</b> talks in three tones (high · mid · low — ternary, ~1.58 bits a beat, the radix nearest <i>e</i>). Mute and unmute the layers; they all run through the ternary echo. Binary, ternary, and the lyric line — the whole communication procession, sounding at once.</p>
+  <p class="sub">One clock, four voices, played <b>together</b>. The <b>lyre</b> carries the line (the voice of Sappho &amp; LIMEN); under it the <b>two-tone drum</b> keeps the binary pulse (low 0 · high 1, the Kele code); the <b>dùndún</b> talks in three tones and <i>glides</i> like a voice (ternary, ~1.58 bits a beat, the radix nearest <i>e</i>); and the <b>bàtá</b> answers in sharp fixed strokes — the <i>ciphered</i> drum (ẹ̀nà, a compiler's intermediate code). Mute and unmute the layers; they all run through the ternary echo. Binary, ternary, the cipher, and the lyric line — the whole communication procession, sounding at once.</p>
 
   <canvas id="stage"></canvas>
   <div class="layers" id="layers"></div>
@@ -61,7 +61,7 @@
   </div>
 
   <div class="note">
-    <b>what's real.</b> the two-tone (binary) contour is the Kele drum code (Carrington via Gleick); the three-tone dùndún is the Yorùbá tension drum (high/mid/low, tracks speech at R≥0.98); the plucked lyre voices the Sapphic / LIMEN line. each instrument's voice is a live Web-Audio synthesis. full standalone instruments: <a href="https://davidwise01.github.io/talking-drum/">the two-tone drum</a> · <a href="https://davidwise01.github.io/talking-drum-dundun/">the dùndún</a> · <a href="https://davidwise01.github.io/limen-sapphic-carrier/">the Sapphic carrier</a>.
+    <b>what's real.</b> the two-tone (binary) contour is the Kele drum code (Carrington via Gleick); the three-tone dùndún is the Yorùbá tension drum (high/mid/low, tracks speech at R≥0.98); the plucked lyre voices the Sapphic / LIMEN line. each instrument's voice is a live Web-Audio synthesis. full standalone instruments: <a href="https://davidwise01.github.io/talking-drum/">the two-tone drum</a> · <a href="https://davidwise01.github.io/talking-drum-dundun/">the dùndún</a> · <a href="https://davidwise01.github.io/talking-drum-bata/">the bàtá</a> · <a href="https://davidwise01.github.io/limen-sapphic-carrier/">the Sapphic carrier</a>.
     <br><b>what's the system.</b> the patterns and the way the three are stacked into one groove is ROOT0's arrangement — a render of the family playing together, not a transcribed traditional ensemble. the ternary echo (3 voices, −/0/+) is ROOT0's. respect to living traditions; this is a study, not a recording.
   </div>
 </div>
@@ -120,18 +120,30 @@
     var lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=1600;
     var lfo=ctx.createOscillator(); lfo.frequency.value=5.5; var lg=ctx.createGain(); lg.gain.value=freq*0.008; lfo.connect(lg).connect(o.frequency); lfo.start(t); lfo.stop(t+0.5);
     o.connect(lp).connect(g); out(g); o.start(t); o.stop(t+0.5); }
+  // bàtá — sharp, dry, FIXED-pitch strikes (no glide); the ciphered drum's hard target voice
+  var BATF={L:165,M:220,H:300};
+  function bata(tone,t){ var f=BATF[tone], o=ctx.createOscillator(); o.type="triangle";
+    o.frequency.setValueAtTime(f*1.35,t); o.frequency.exponentialRampToValueAtTime(f,t+0.025);
+    var g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.42,t+0.003); g.gain.exponentialRampToValueAtTime(0.0001,t+0.13);
+    var lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=2700; o.connect(lp).connect(g); out(g); o.start(t); o.stop(t+0.18);
+    var nb=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.045),ctx.sampleRate),nd=nb.getChannelData(0);
+    for(var i=0;i<nd.length;i++) nd[i]=(Math.random()*2-1)*Math.pow(1-i/nd.length,1.6);
+    var ns=ctx.createBufferSource(); ns.buffer=nb; var hp=ctx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=1900;
+    var ng=ctx.createGain(); ng.gain.value=0.34; ns.connect(hp).connect(ng); out(ng); ns.start(t); ns.stop(t+0.06); }
 
-  // ── the three layers (16-step patterns) ──
+  // ── the four layers (16-step patterns) ──
   var PENTA=[220.00,261.63,293.66,329.63,392.00];
   var LYRE={0:0,3:3,6:4,8:3,10:2,12:1,14:2};                 // a lilting pentatonic line
   var DRUM={0:'lo',4:'lo',8:'lo',12:'lo',2:'hi',6:'hi',10:'hi',14:'hi'};  // binary pulse
   var DUN ={0:'L',2:'H',5:'M',7:'L',9:'H',11:'M',13:'L',15:'H'};          // ternary ostinato (glides)
+  var BATA={1:'H',3:'L',6:'M',8:'H',11:'L',14:'M'};                       // ternary, sharp & ciphered (syncopated, no glide)
   var LAYERS=[
     {key:'lyre', name:'the Lyre', sub:'LIMEN · Sappho · pentatonic line', on:true, color:'#d9a441'},
     {key:'dundun', name:'the Dùndún', sub:'ternary · high·mid·low · glides', on:true, color:'#cf8233'},
+    {key:'bata', name:'the Bàtá', sub:'ternary · ciphered · sharp fixed strokes', on:true, color:'#b24a78'},
     {key:'drum', name:'the Two-Tone Drum', sub:'binary · low 0 · high 1', on:true, color:'#9aa8c0'}
   ];
-  var enabled={lyre:true,dundun:true,drum:true};
+  var enabled={lyre:true,dundun:true,bata:true,drum:true};
   var lastDun=null;
 
   // ── transport ──
@@ -140,7 +152,8 @@
     if(echo) echo.rotateAt(now, step);
     if(enabled.lyre && LYRE[step]!==undefined){ pluck(PENTA[LYRE[step]], now, 0.9, 0.4); flash(0,step,'#d9a441'); }
     if(enabled.dundun && DUN[step]!==undefined){ var tn=DUN[step]; strike(DUNF[tn], now, lastDun?DUNF[lastDun]:null); lastDun=tn; flash(1,step,'#cf8233'); }
-    if(enabled.drum && DRUM[step]!==undefined){ drum(DRUM[step]==='hi', now); flash(2,step,'#9aa8c0'); }
+    if(enabled.bata && BATA[step]!==undefined){ bata(BATA[step], now); flash(2,step,'#b24a78'); }
+    if(enabled.drum && DRUM[step]!==undefined){ drum(DRUM[step]==='hi', now); flash(3,step,'#9aa8c0'); }
   }
   function start(){ init(); resume(); if(timer){ stop(); return; } step=-1; lastDun=null;
     if(echo) echo.setBeat(60/tempo); var ms=60000/tempo/4; timer=setInterval(tick, ms);
@@ -148,17 +161,17 @@
   function stop(){ if(timer){ clearInterval(timer); timer=null; } step=-1;
     document.getElementById('play').innerHTML="<span>▶</span> begin the procession"; }
 
-  // ── visual: 3 lanes + playhead ──
+  // ── visual: 4 lanes + playhead ──
   var cv=document.getElementById("stage"), g=cv.getContext("2d"), CW=720, CH=240, hits=[];
   function fit(){ CW=cv.width=cv.clientWidth||720; CH=cv.height=240; }
-  function laneY(i){ return CH*(0.26+i*0.24); }
+  function laneY(i){ return CH*(0.18+i*0.205); }
   function flash(lane,st,col){ hits.push({t0:performance.now(),lane:lane,st:st,col:col}); }
   function draw(){
     g.fillStyle="#0b0716"; g.fillRect(0,0,CW,CH);
-    var padL=78, x0=padL, x1=CW-20, dx=(x1-x0)/STEPS;
-    var names=["LYRE","DÙNDÚN","DRUM"], cols=["#d9a441","#cf8233","#9aa8c0"];
-    var PATS=[LYRE,DUN,DRUM];
-    for(var i=0;i<3;i++){ var y=laneY(i);
+    var padL=84, x0=padL, x1=CW-20, dx=(x1-x0)/STEPS;
+    var names=["LYRE","DÙNDÚN","BÀTÁ","DRUM"], cols=["#d9a441","#cf8233","#b24a78","#9aa8c0"];
+    var PATS=[LYRE,DUN,BATA,DRUM];
+    for(var i=0;i<4;i++){ var y=laneY(i);
       g.strokeStyle="rgba(154,152,166,0.14)"; g.lineWidth=1; g.beginPath(); g.moveTo(x0,y); g.lineTo(x1,y); g.stroke();
       g.fillStyle=enabled[LAYERS[i].key]?cols[i]:"#3a3550"; g.font="10px 'IBM Plex Mono',monospace"; g.textBaseline="middle"; g.textAlign="left";
       g.fillText(names[i], 10, y);
