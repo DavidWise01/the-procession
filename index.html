@@ -3,44 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Procession — the lyre, the two-tone drum & the dùndún, played together</title>
+<title>The Procession — a layered cipher, split by sound &amp; style</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500&family=Spectral:ital,wght@0,300;0,400;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{--sea:#170d20;--line:rgba(154,152,166,.16);--lead:#9a98a6;--lead-dim:#5b5868;
-    --parch:#e9e2d2;--parch-dim:#b9b2a3;--gold:#d9a441;--gold-dim:#a87f33;--verd:#73b3a3;--murex:#9a3d68;
-    --ochre:#cf8233;--lyre:#d9a441;--dun:#cf8233;--drum:#9aa8c0;}
+    --parch:#e9e2d2;--parch-dim:#b9b2a3;--gold:#d9a441;--gold-dim:#a87f33;--verd:#73b3a3;--murex:#b24a78;
+    --ochre:#cf8233;--steel:#9aa8c0;}
   *{box-sizing:border-box}
   body{margin:0;min-height:100vh;background:var(--sea);color:var(--parch);font-family:"Spectral",Georgia,serif;line-height:1.55;
     -webkit-font-smoothing:antialiased;background-image:radial-gradient(1100px 560px at 80% -12%,rgba(217,164,65,.12),transparent 60%),
-      radial-gradient(820px 640px at 5% 112%,rgba(115,179,163,.09),transparent 55%);display:flex;justify-content:center}
-  .card{max-width:720px;width:100%;padding:32px 22px 52px}
+      radial-gradient(820px 640px at 4% 112%,rgba(115,179,163,.09),transparent 55%);display:flex;justify-content:center}
+  .card{max-width:740px;width:100%;padding:32px 22px 54px}
   .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold-dim)}
   h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(38px,10vw,60px);margin:6px 0 0;line-height:.96;letter-spacing:-.5px}
-  .sub{font-style:italic;font-weight:300;color:var(--parch-dim);font-size:15.5px;margin:14px 0 0;max-width:60ch}
+  .sub{font-style:italic;font-weight:300;color:var(--parch-dim);font-size:15.5px;margin:14px 0 0;max-width:62ch}
   .sub b{color:var(--verd);font-style:normal;font-weight:400}
 
-  #stage{display:block;width:100%;height:240px;border-radius:9px;margin-top:20px;background:#0b0716;border:1px solid var(--line)}
-  .layers{display:flex;flex-direction:column;gap:8px;margin-top:14px}
-  .layer{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:7px;padding:10px 13px;
-    background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.16))}
-  .layer .sw{width:12px;height:12px;border-radius:50%;flex:0 0 12px}
-  .layer .nm{flex:1;font-family:"Spectral",serif;font-size:15.5px}
-  .layer .nm small{display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--lead-dim);letter-spacing:.04em;margin-top:1px}
-  .layer .tog{cursor:pointer;border:1px solid rgba(217,164,65,.45);border-radius:20px;padding:5px 13px;color:var(--gold);
-    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.04em;white-space:nowrap}
-  .layer .tog.off{border-color:var(--line);color:var(--lead-dim)}
-
-  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
-  button.play{display:inline-flex;align-items:center;gap:9px;cursor:pointer;
-    background:linear-gradient(180deg,rgba(217,164,65,.20),rgba(217,164,65,.06));border:1px solid rgba(217,164,65,.55);
-    border-radius:5px;color:var(--parch);padding:12px 20px;font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.04em;transition:.15s}
+  .masterbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:20px;padding:13px 15px;border:1px solid var(--line);border-radius:9px;
+    background:linear-gradient(180deg,rgba(217,164,65,.06),rgba(0,0,0,.18));position:sticky;top:0;z-index:5;backdrop-filter:blur(7px)}
+  button.play{display:inline-flex;align-items:center;gap:8px;cursor:pointer;background:linear-gradient(180deg,rgba(217,164,65,.22),rgba(217,164,65,.06));
+    border:1px solid rgba(217,164,65,.55);border-radius:5px;color:var(--parch);padding:11px 18px;font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.04em;transition:.15s}
   button.play:hover{background:rgba(217,164,65,.16)} button.play:active{transform:translateY(1px)}
-  label.tempo{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--lead-dim)}
-  label.tempo input{vertical-align:middle;width:120px;accent-color:var(--ochre)}
-  button.echo-btn{font-family:"IBM Plex Mono",monospace;font-size:11px;cursor:pointer;color:var(--verd);background:transparent;border:1px solid rgba(115,179,163,.4);border-radius:5px;padding:9px 12px}
+  .masterbar label{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--lead-dim)}
+  .masterbar input[type=range]{vertical-align:middle;width:96px;accent-color:var(--ochre)}
+  button.echo-btn{font-family:"IBM Plex Mono",monospace;font-size:11px;cursor:pointer;color:var(--verd);background:transparent;border:1px solid rgba(115,179,163,.4);border-radius:5px;padding:8px 11px}
   button.echo-btn.off{color:var(--lead-dim);border-color:var(--line)}
+
+  .tracks{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+  .track{border:1px solid var(--line);border-radius:10px;padding:14px 15px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.18));
+    border-left:3px solid var(--tc,#888)}
+  .track .thead{display:flex;align-items:center;gap:11px}
+  .track .sw{width:11px;height:11px;border-radius:50%;flex:0 0 11px;background:var(--tc)}
+  .track .nm{flex:1;font-family:"Cormorant Garamond",serif;font-size:22px;color:var(--parch);line-height:1.05}
+  .track .nm small{display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--lead-dim);letter-spacing:.05em;margin-top:2px}
+  .track .tog{cursor:pointer;border:1px solid;border-radius:20px;padding:5px 14px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.04em;
+    border-color:var(--tc);color:var(--tc);background:transparent}
+  .track .tog.off{border-color:var(--line);color:var(--lead-dim)}
+  .wordrow{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+  .wordrow input.word{flex:1;min-width:150px;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:6px;color:var(--parch);
+    font-family:"Cormorant Garamond",serif;font-size:20px;padding:8px 12px}
+  .wordrow input.word:focus{outline:none;border-color:var(--tc)}
+  .enc{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--lead-dim);min-width:120px}
+  .enc b{color:var(--parch-dim)}
+  .strip{margin-top:10px;font-family:"IBM Plex Mono",monospace;font-size:17px;letter-spacing:3px;min-height:24px;word-break:break-word}
+  .strip .g{opacity:.55;transition:opacity .05s,text-shadow .05s}
+  .strip .g.on{opacity:1;text-shadow:0 0 9px currentColor}
+  .ctrls{display:flex;gap:16px;flex-wrap:wrap;margin-top:11px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--lead-dim)}
+  .ctrls label{display:inline-flex;flex-direction:column;gap:3px}
+  .ctrls input[type=range]{width:110px;accent-color:var(--tc)}
+  .ctrls .v{color:var(--parch-dim)}
 
   .note{margin-top:24px;border-top:1px solid var(--line);padding-top:15px;font-family:"IBM Plex Mono",monospace;font-size:11px;line-height:1.85;color:var(--lead-dim)}
   .note b{color:var(--gold-dim);font-weight:500} .note a{color:var(--lead)}
@@ -48,165 +61,172 @@
 </head>
 <body>
 <div class="card">
-  <div class="eyebrow">a purple-paper ensemble · HERMES · ROOT0</div>
+  <div class="eyebrow">a purple-paper cipher · HERMES · ROOT0</div>
   <h1>The Procession</h1>
-  <p class="sub">One clock, four voices, played <b>together</b>. The <b>lyre</b> carries the line (the voice of Sappho &amp; LIMEN); under it the <b>two-tone drum</b> keeps the binary pulse (low 0 · high 1, the Kele code); the <b>dùndún</b> talks in three tones and <i>glides</i> like a voice (ternary, ~1.58 bits a beat, the radix nearest <i>e</i>); and the <b>bàtá</b> answers in sharp fixed strokes — the <i>ciphered</i> drum (ẹ̀nà, a compiler's intermediate code). Mute and unmute the layers; they all run through the ternary echo. Binary, ternary, the cipher, and the lyric line — the whole communication procession, sounding at once.</p>
+  <p class="sub">Four voices, four windows, one clock — and each is a <b>different cipher</b>. Type a word into any box and it is enciphered in that voice's own way: the <b>lyre</b> turns letters into a pentatonic line; the <b>dùndún</b> reads it as gliding Yorùbá tones; the <b>bàtá</b> runs it through ẹ̀nà (the real vowel-echo cipher) and strikes it; the <b>two-tone drum</b> renders it as binary (vowel 1 · consonant 0). Give each its own word and its own speed, angle &amp; volume — then play them <b>together</b>: a layered cipher, split by sound and style, all through the ternary echo.</p>
 
-  <canvas id="stage"></canvas>
-  <div class="layers" id="layers"></div>
-  <div class="row">
-    <button class="play" id="play"><span>▶</span> begin the procession</button>
-    <label class="tempo">tempo <input id="tempo" type="range" min="60" max="150" value="92"></label>
+  <div class="masterbar">
+    <button class="play" id="play"><span>▶</span> play all</button>
+    <label>tempo <input id="tempo" type="range" min="50" max="160" value="92"></label>
     <button class="echo-btn" id="echoBtn">◎ ternary echo: on</button>
   </div>
 
+  <div class="tracks" id="tracks"></div>
+
   <div class="note">
-    <b>what's real.</b> the two-tone (binary) contour is the Kele drum code (Carrington via Gleick); the three-tone dùndún is the Yorùbá tension drum (high/mid/low, tracks speech at R≥0.98); the plucked lyre voices the Sapphic / LIMEN line. each instrument's voice is a live Web-Audio synthesis. full standalone instruments: <a href="https://davidwise01.github.io/talking-drum/">the two-tone drum</a> · <a href="https://davidwise01.github.io/talking-drum-dundun/">the dùndún</a> · <a href="https://davidwise01.github.io/talking-drum-bata/">the bàtá</a> · <a href="https://davidwise01.github.io/limen-sapphic-carrier/">the Sapphic carrier</a>.
-    <br><b>what's the system.</b> the patterns and the way the three are stacked into one groove is ROOT0's arrangement — a render of the family playing together, not a transcribed traditional ensemble. the ternary echo (3 voices, −/0/+) is ROOT0's. respect to living traditions; this is a study, not a recording.
+    <b>what's real.</b> the bàtá's ẹ̀nà cipher (echo each vowel onto a 'g' syllable, copying its tone) is the documented Yorùbá language game; the dùndún reads real Yorùbá tone-marks (à=low · a=mid · á=high); the two-tone (binary) and three-tone (ternary) drums are the Kele &amp; Yorùbá talking-drum codes (Carrington/Gleick, Villepastour). standalone instruments: <a href="https://davidwise01.github.io/talking-drum/">two-tone</a> · <a href="https://davidwise01.github.io/talking-drum-dundun/">dùndún</a> · <a href="https://davidwise01.github.io/talking-drum-bata/">bàtá</a> · <a href="https://davidwise01.github.io/limen-sapphic-carrier/">Sapphic carrier</a>.
+    <br><b>what's the system.</b> the letter→pitch and vowel→bit mappings, mixing four word-ciphers into one polyrhythmic groove, and the ternary echo (3 voices −/0/+) are ROOT0's composition — a study, not a transcribed ensemble. voices are live Web-Audio synthesis.
   </div>
 </div>
 
 <script>
 (function(){
   "use strict";
-  var STEPS=16;
-  // ── voices ──
-  var ctx=null, master=null, echo=null, echoOn=true;
+  var ctx=null, master=null, echo=null, echoOn=true, tempo=92, playing=false;
   function init(){ if(ctx) return; ctx=new (window.AudioContext||window.webkitAudioContext)();
-    master=ctx.createGain(); master.gain.value=0.6;
-    var conv=ctx.createConvolver(), rate=ctx.sampleRate, len=Math.floor(rate*1.3), ir=ctx.createBuffer(2,len,rate);
+    master=ctx.createGain(); master.gain.value=0.55;
+    var conv=ctx.createConvolver(), rate=ctx.sampleRate, len=Math.floor(rate*1.2), ir=ctx.createBuffer(2,len,rate);
     for(var c=0;c<2;c++){var d=ir.getChannelData(c);for(var i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.8);}
     conv.buffer=ir; var wet=ctx.createGain(); wet.gain.value=0.12;
     master.connect(ctx.destination); master.connect(conv); conv.connect(wet).connect(ctx.destination);
     echo=makeTernaryEcho(ctx,master); echo.setOn(echoOn);
+    TRACKS.forEach(buildChain);
   }
   function resume(){ if(ctx&&ctx.state==="suspended") ctx.resume(); }
-  function out(node){ node.connect(master); if(echo) node.connect(echo.input); }
 
-  // the ternary echo (from the LIMEN carriers)
   var TROT=[[1/3,2/3,2.99/3],[2/3,2.99/3,1/3],[2.99/3,1/3,2/3]];
   function makeTernaryEcho(ac,o){ var beat=0.5,input=ac.createGain(),fb=ac.createGain(),wet=ac.createGain(),taps=[];
-    fb.gain.value=0.28; wet.gain.value=0.45;
+    fb.gain.value=0.26; wet.gain.value=0.4;
     for(var i=0;i<3;i++){ var d=ac.createDelay(2.0); d.delayTime.value=TROT[0][i]*beat; var tg=ac.createGain(); tg.gain.value=0.7-i*0.1;
       var p=ac.createStereoPanner?ac.createStereoPanner():null; input.connect(d);
       if(p){ p.pan.value=[-1,0,1][i]; d.connect(p); p.connect(tg);} else d.connect(tg); tg.connect(wet); tg.connect(fb); taps.push({delay:d,pan:p}); }
     fb.connect(input); wet.connect(o);
-    return { input:input, setBeat:function(b){beat=b;}, setOn:function(v){ wet.gain.setTargetAtTime(v?0.45:0.0001,ac.currentTime,0.02); },
-      rotateAt:function(t,r){ var rot=TROT[((r%3)+3)%3]; for(var i=0;i<3;i++) taps[i].delay.delayTime.setValueAtTime(rot[i]*beat,t); } };
+    return { input:input, setBeat:function(b){beat=b;}, setOn:function(v){ wet.gain.setTargetAtTime(v?0.4:0.0001,ac.currentTime,0.02); },
+      rotate:function(r){ var rot=TROT[((r%3)+3)%3]; for(var i=0;i<3;i++) taps[i].delay.delayTime.setTargetAtTime(rot[i]*beat,ac.currentTime,0.01); } };
   }
 
-  // lyre — Karplus-Strong pluck
-  function pluck(freq,t,dur,gain){ gain=gain||0.4; var rate=ctx.sampleRate,N=Math.max(2,Math.round(rate/freq)),
+  // ── voices (each takes a destination node = the track's gain) ──
+  function pluck(freq,t,dur,gain,dest){ var rate=ctx.sampleRate,N=Math.max(2,Math.round(rate/freq)),
       L=Math.max(N+4,Math.floor(rate*dur)),buf=ctx.createBuffer(1,L,rate),d=buf.getChannelData(0);
     for(var i=0;i<N;i++) d[i]=Math.random()*2-1; var dec=0.9965;
     for(i=N;i<L;i++) d[i]=dec*0.5*(d[i-N]+d[i-N+1]);
-    var s=ctx.createBufferSource(); s.buffer=buf; var g=ctx.createGain();
-    g.gain.setValueAtTime(gain,t); g.gain.exponentialRampToValueAtTime(0.0006,t+dur); s.connect(g); out(g); s.start(t); s.stop(t+dur+0.02); }
-  // two-tone drum — sine kick + click (low 140 / high 210)
-  function drum(high,t){ var f=high?210:140, o=ctx.createOscillator(); o.type="sine";
-    o.frequency.setValueAtTime(f*1.7,t); o.frequency.exponentialRampToValueAtTime(f,t+0.05);
-    var g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(high?0.5:0.7,t+0.004); g.gain.exponentialRampToValueAtTime(0.0001,t+(high?0.24:0.36));
-    var lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=high?1100:700; o.connect(lp).connect(g); out(g); o.start(t); o.stop(t+0.45);
-    var nb=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.02),ctx.sampleRate),nd=nb.getChannelData(0);
-    for(var i=0;i<nd.length;i++) nd[i]=(Math.random()*2-1)*(1-i/nd.length);
-    var ns=ctx.createBufferSource(); ns.buffer=nb; var hp=ctx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=1400;
-    var ng=ctx.createGain(); ng.gain.value=high?0.2:0.15; ns.connect(hp).connect(ng); out(ng); ns.start(t); ns.stop(t+0.03); }
-  // dùndún — triangle tension-drum, glides from previous tone
-  var DUNF={L:174.61,M:196.00,H:220.00};
-  function strike(freq,t,fromFreq){ var o=ctx.createOscillator(); o.type="triangle";
+    var s=ctx.createBufferSource(); s.buffer=buf; var g=ctx.createGain(); g.gain.setValueAtTime(gain,t); g.gain.exponentialRampToValueAtTime(0.0006,t+dur);
+    s.connect(g).connect(dest); s.start(t); s.stop(t+dur+0.02); }
+  function strike(freq,t,fromFreq,dest){ var o=ctx.createOscillator(); o.type="triangle";
     if(fromFreq){ o.frequency.setValueAtTime(fromFreq,t); o.frequency.exponentialRampToValueAtTime(freq,t+0.10); }
     else { o.frequency.setValueAtTime(freq*1.5,t); o.frequency.exponentialRampToValueAtTime(freq,t+0.045); }
-    var g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.4,t+0.006); g.gain.exponentialRampToValueAtTime(0.0001,t+0.4);
-    var lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=1600;
-    var lfo=ctx.createOscillator(); lfo.frequency.value=5.5; var lg=ctx.createGain(); lg.gain.value=freq*0.008; lfo.connect(lg).connect(o.frequency); lfo.start(t); lfo.stop(t+0.5);
-    o.connect(lp).connect(g); out(g); o.start(t); o.stop(t+0.5); }
-  // bàtá — sharp, dry, FIXED-pitch strikes (no glide); the ciphered drum's hard target voice
+    var g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.5,t+0.006); g.gain.exponentialRampToValueAtTime(0.0001,t+0.4);
+    var lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=1600; o.connect(lp).connect(g).connect(dest); o.start(t); o.stop(t+0.5); }
   var BATF={L:165,M:220,H:300};
-  function bata(tone,t){ var f=BATF[tone], o=ctx.createOscillator(); o.type="triangle";
+  function bata(tone,t,dest){ var f=BATF[tone], o=ctx.createOscillator(); o.type="triangle";
     o.frequency.setValueAtTime(f*1.35,t); o.frequency.exponentialRampToValueAtTime(f,t+0.025);
-    var g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.42,t+0.003); g.gain.exponentialRampToValueAtTime(0.0001,t+0.13);
-    var lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=2700; o.connect(lp).connect(g); out(g); o.start(t); o.stop(t+0.18);
+    var g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.5,t+0.003); g.gain.exponentialRampToValueAtTime(0.0001,t+0.13);
+    var lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=2700; o.connect(lp).connect(g).connect(dest); o.start(t); o.stop(t+0.18);
     var nb=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.045),ctx.sampleRate),nd=nb.getChannelData(0);
     for(var i=0;i<nd.length;i++) nd[i]=(Math.random()*2-1)*Math.pow(1-i/nd.length,1.6);
     var ns=ctx.createBufferSource(); ns.buffer=nb; var hp=ctx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=1900;
-    var ng=ctx.createGain(); ng.gain.value=0.34; ns.connect(hp).connect(ng); out(ng); ns.start(t); ns.stop(t+0.06); }
+    var ng=ctx.createGain(); ng.gain.value=0.34; ns.connect(hp).connect(ng).connect(dest); ns.start(t); ns.stop(t+0.06); }
+  function drum(high,t,dest){ var f=high?210:140, o=ctx.createOscillator(); o.type="sine";
+    o.frequency.setValueAtTime(f*1.7,t); o.frequency.exponentialRampToValueAtTime(f,t+0.05);
+    var g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(high?0.5:0.7,t+0.004); g.gain.exponentialRampToValueAtTime(0.0001,t+(high?0.24:0.36));
+    var lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=high?1100:700; o.connect(lp).connect(g).connect(dest); o.start(t); o.stop(t+0.45);
+    var nb=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.02),ctx.sampleRate),nd=nb.getChannelData(0);
+    for(var i=0;i<nd.length;i++) nd[i]=(Math.random()*2-1)*(1-i/nd.length);
+    var ns=ctx.createBufferSource(); ns.buffer=nb; var hp=ctx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=1400;
+    var ng=ctx.createGain(); ng.gain.value=high?0.2:0.15; ns.connect(hp).connect(ng).connect(dest); ns.start(t); ns.stop(t+0.03); }
 
-  // ── the four layers (16-step patterns) ──
+  // ── ciphers (one per voice) ──
   var PENTA=[220.00,261.63,293.66,329.63,392.00];
-  var LYRE={0:0,3:3,6:4,8:3,10:2,12:1,14:2};                 // a lilting pentatonic line
-  var DRUM={0:'lo',4:'lo',8:'lo',12:'lo',2:'hi',6:'hi',10:'hi',14:'hi'};  // binary pulse
-  var DUN ={0:'L',2:'H',5:'M',7:'L',9:'H',11:'M',13:'L',15:'H'};          // ternary ostinato (glides)
-  var BATA={1:'H',3:'L',6:'M',8:'H',11:'L',14:'M'};                       // ternary, sharp & ciphered (syncopated, no glide)
-  var LAYERS=[
-    {key:'lyre', name:'the Lyre', sub:'LIMEN · Sappho · pentatonic line', on:true, color:'#d9a441'},
-    {key:'dundun', name:'the Dùndún', sub:'ternary · high·mid·low · glides', on:true, color:'#cf8233'},
-    {key:'bata', name:'the Bàtá', sub:'ternary · ciphered · sharp fixed strokes', on:true, color:'#b24a78'},
-    {key:'drum', name:'the Two-Tone Drum', sub:'binary · low 0 · high 1', on:true, color:'#9aa8c0'}
+  var DUNF={L:174.61,M:196.00,H:220.00};
+  function isVowel(ch){ return /[aeiouàèìòùáéíóúâêîôûäëïöü]/i.test(ch); }
+  function enaStr(s){ return s.normalize('NFD').replace(/[aeiou][̀-ͯ]*/gi, function(m){ return m+'g'+m.toLowerCase(); }).normalize('NFC'); }
+  function vowelTones(s){ var d=s.normalize('NFD'), re=/[aeiou][̀-ͯ]*/gi, r=[], m, i=0;
+    while((m=re.exec(d))){ var g=m[0], t = g.indexOf('́')>=0?'H' : g.indexOf('̀')>=0?'L' : ['M','H','L'][i%3]; r.push(t); i++; } return r; }
+
+  var ENC={
+    lyre:function(w){ var ev=[],strip=[]; for(var i=0;i<w.length;i++){ var ch=w[i]; if(!/[a-zà-ÿ]/i.test(ch)) continue;
+        var code=ch.toLowerCase().charCodeAt(0), deg=((code%5)+5)%5; ev.push({freq:PENTA[deg]});
+        strip.push({glyph:'♪', color:['#8a6a2e','#a87f33','#d9a441','#e6c25a','#f0d98a'][deg]}); }
+      return {events:ev, strip:strip, readout:'letters → <b>'+ev.length+'</b> notes (pentatonic)'}; },
+    dundun:function(w){ var tones=vowelTones(w); if(!tones.length){ tones=mapTones(w); }
+      var ev=tones.map(function(t){ return {freq:DUNF[t], tone:t, glide:true}; });
+      var strip=tones.map(function(t){ return {glyph:t, color:t==='H'?'#e6b34a':t==='M'?'#cf8233':'#9a98a6'}; });
+      return {events:ev, strip:strip, readout:'tones: <b>'+tones.join('·')+'</b>'}; },
+    bata:function(w){ var ena=enaStr(w), tones=vowelTones(ena); if(!tones.length){ tones=mapTones(ena||w); }
+      var ev=tones.map(function(t){ return {tone:t}; });
+      var strip=tones.map(function(t){ return {glyph:t==='H'?'●':t==='M'?'◍':'○', color:t==='H'?'#e6b34a':t==='M'?'#cf8233':'#9a98a6'}; });
+      return {events:ev, strip:strip, readout:'ẹ̀nà: <b>'+ena+'</b>'}; },
+    drum:function(w){ var ev=[],strip=[],bits=''; for(var i=0;i<w.length;i++){ var ch=w[i]; if(!/[a-zà-ÿ]/i.test(ch)) continue;
+        var hi=isVowel(ch); ev.push({high:hi}); bits+=hi?'1':'0'; strip.push({glyph:hi?'1':'0', color:hi?'#cf8233':'#9aa8c0'}); }
+      return {events:ev, strip:strip, readout:'binary: <b>'+(bits||'—')+'</b>'}; }
+  };
+  function mapTones(w){ var r=[]; for(var i=0;i<w.length;i++){ var ch=w[i]; if(!/[a-zà-ÿ]/i.test(ch)) continue; r.push(['L','M','H'][ch.toLowerCase().charCodeAt(0)%3]); } return r.length?r:['M']; }
+
+  // ── tracks ──
+  var TRACKS=[
+    {key:'lyre', name:'the Lyre', style:'LIMEN · Sappho · letters → pentatonic', color:'#d9a441', word:'sappho', speed:1.0, pan:-0.45, vol:0.85},
+    {key:'dundun', name:'the Dùndún', style:'ternary · Yorùbá tones · glides', color:'#cf8233', word:'Yorùbá', speed:0.75, pan:0.2, vol:0.8},
+    {key:'bata', name:'the Bàtá', style:'ẹ̀nà cipher · sharp fixed strokes', color:'#b24a78', word:'Ṣàngó', speed:1.5, pan:0.5, vol:0.7},
+    {key:'drum', name:'the Two-Tone Drum', style:'binary · vowel 1 · consonant 0', color:'#9aa8c0', word:'limen', speed:0.5, pan:0.0, vol:0.8}
   ];
-  var enabled={lyre:true,dundun:true,bata:true,drum:true};
-  var lastDun=null;
+  function buildChain(tr){ if(tr.gain) return; tr.gain=ctx.createGain(); tr.gain.gain.value=tr.vol;
+    var pn=ctx.createStereoPanner?ctx.createStereoPanner():null; if(pn){ pn.pan.value=tr.pan; tr.gain.connect(pn); tr.panNode=pn; pn.connect(master); if(echo) pn.connect(echo.input); }
+    else { tr.gain.connect(master); if(echo) tr.gain.connect(echo.input); } }
+  function playNote(tr){ if(!tr.events.length) return; var ev=tr.events[tr.ptr%tr.events.length], t=ctx.currentTime+0.01, dest=tr.gain;
+    if(tr.key==='lyre') pluck(ev.freq,t,0.85,0.5,dest);
+    else if(tr.key==='dundun'){ strike(ev.freq,t, tr.last||null, dest); tr.last=ev.freq; }
+    else if(tr.key==='bata') bata(ev.tone,t,dest);
+    else if(tr.key==='drum') drum(ev.high,t,dest);
+    hl(tr, tr.ptr%tr.events.length); tr.ptr=(tr.ptr+1)%tr.events.length; }
+  function trackMs(tr){ return (60/tempo/2)/Math.max(0.1,tr.speed)*1000; }   // 8th-note base ÷ speed
+  function startTrack(tr){ stopTrack(tr); if(!tr.on||!tr.events.length) return; tr.ptr=0; tr.last=null; tr.timer=setInterval(function(){ playNote(tr); }, trackMs(tr)); }
+  function stopTrack(tr){ if(tr.timer){ clearInterval(tr.timer); tr.timer=null; } }
+  function hl(tr,i){ if(!tr.spans) return; for(var k=0;k<tr.spans.length;k++) tr.spans[k].classList.toggle('on',k===i); }
 
-  // ── transport ──
-  var step=-1, timer=null, tempo=92;
-  function tick(){ step=(step+1)%STEPS; var now=ctx.currentTime+0.02;
-    if(echo) echo.rotateAt(now, step);
-    if(enabled.lyre && LYRE[step]!==undefined){ pluck(PENTA[LYRE[step]], now, 0.9, 0.4); flash(0,step,'#d9a441'); }
-    if(enabled.dundun && DUN[step]!==undefined){ var tn=DUN[step]; strike(DUNF[tn], now, lastDun?DUNF[lastDun]:null); lastDun=tn; flash(1,step,'#cf8233'); }
-    if(enabled.bata && BATA[step]!==undefined){ bata(BATA[step], now); flash(2,step,'#b24a78'); }
-    if(enabled.drum && DRUM[step]!==undefined){ drum(DRUM[step]==='hi', now); flash(3,step,'#9aa8c0'); }
-  }
-  function start(){ init(); resume(); if(timer){ stop(); return; } step=-1; lastDun=null;
-    if(echo) echo.setBeat(60/tempo); var ms=60000/tempo/4; timer=setInterval(tick, ms);
-    document.getElementById('play').innerHTML="<span>■</span> stop"; }
-  function stop(){ if(timer){ clearInterval(timer); timer=null; } step=-1;
-    document.getElementById('play').innerHTML="<span>▶</span> begin the procession"; }
-
-  // ── visual: 4 lanes + playhead ──
-  var cv=document.getElementById("stage"), g=cv.getContext("2d"), CW=720, CH=240, hits=[];
-  function fit(){ CW=cv.width=cv.clientWidth||720; CH=cv.height=240; }
-  function laneY(i){ return CH*(0.18+i*0.205); }
-  function flash(lane,st,col){ hits.push({t0:performance.now(),lane:lane,st:st,col:col}); }
-  function draw(){
-    g.fillStyle="#0b0716"; g.fillRect(0,0,CW,CH);
-    var padL=84, x0=padL, x1=CW-20, dx=(x1-x0)/STEPS;
-    var names=["LYRE","DÙNDÚN","BÀTÁ","DRUM"], cols=["#d9a441","#cf8233","#b24a78","#9aa8c0"];
-    var PATS=[LYRE,DUN,BATA,DRUM];
-    for(var i=0;i<4;i++){ var y=laneY(i);
-      g.strokeStyle="rgba(154,152,166,0.14)"; g.lineWidth=1; g.beginPath(); g.moveTo(x0,y); g.lineTo(x1,y); g.stroke();
-      g.fillStyle=enabled[LAYERS[i].key]?cols[i]:"#3a3550"; g.font="10px 'IBM Plex Mono',monospace"; g.textBaseline="middle"; g.textAlign="left";
-      g.fillText(names[i], 10, y);
-      // event dots
-      for(var s in PATS[i]){ var sx=x0+dx*(+s)+dx*0.5; g.globalAlpha=enabled[LAYERS[i].key]?0.85:0.25;
-        g.fillStyle=cols[i]; g.beginPath(); g.arc(sx,y,3.2,0,6.283); g.fill(); }
-      g.globalAlpha=1;
-    }
-    // playhead
-    if(step>=0){ var px=x0+dx*step+dx*0.5; g.strokeStyle="rgba(255,255,255,0.5)"; g.lineWidth=1.5; g.beginPath(); g.moveTo(px,CH*0.12); g.lineTo(px,CH*0.92); g.stroke(); }
-    // flashes
-    var now=performance.now();
-    for(var h=hits.length-1;h>=0;h--){ var f=hits[h], a=(now-f.t0)/450; if(a>1){ hits.splice(h,1); continue; }
-      var fx=x0+dx*f.st+dx*0.5, fy=laneY(f.lane);
-      g.globalAlpha=(1-a); g.strokeStyle=f.col; g.lineWidth=2; g.beginPath(); g.arc(fx,fy,4+a*14,0,6.283); g.stroke();
-      g.globalAlpha=(1-a)*0.9; g.fillStyle=f.col; g.beginPath(); g.arc(fx,fy,4,0,6.283); g.fill(); g.globalAlpha=1; }
-    requestAnimationFrame(draw);
+  // ── build the config boxes ──
+  function encode(tr){ var r=ENC[tr.key](tr.input.value||''); tr.events=r.events; tr.encEl.innerHTML=r.readout;
+    tr.stripEl.innerHTML=r.strip.map(function(s){ return '<span class="g" style="color:'+s.color+'">'+s.glyph+'</span>'; }).join('');
+    tr.spans=tr.stripEl.querySelectorAll('.g'); }
+  function buildUI(){ var host=document.getElementById('tracks');
+    TRACKS.forEach(function(tr){ var box=document.createElement('div'); box.className='track'; box.style.setProperty('--tc',tr.color);
+      box.innerHTML=
+        '<div class="thead"><span class="sw"></span><span class="nm">'+tr.name+'<small>'+tr.style+'</small></span><button class="tog">on</button></div>'+
+        '<div class="wordrow"><input class="word" value="'+tr.word.replace(/"/g,'&quot;')+'" spellcheck="false"><span class="enc"></span></div>'+
+        '<div class="strip"></div>'+
+        '<div class="ctrls">'+
+          '<label>speed <input type="range" class="speed" min="25" max="300" value="'+Math.round(tr.speed*100)+'"><span class="v sv"></span></label>'+
+          '<label>angle <input type="range" class="pan" min="-100" max="100" value="'+Math.round(tr.pan*100)+'"><span class="v pv"></span></label>'+
+          '<label>volume <input type="range" class="vol" min="0" max="100" value="'+Math.round(tr.vol*100)+'"></label>'+
+        '</div>';
+      host.appendChild(box);
+      tr.input=box.querySelector('.word'); tr.encEl=box.querySelector('.enc'); tr.stripEl=box.querySelector('.strip');
+      tr.togEl=box.querySelector('.tog'); tr.on=true; tr.events=[]; tr.ptr=0;
+      var sv=box.querySelector('.sv'), pv=box.querySelector('.pv');
+      sv.textContent=tr.speed.toFixed(2)+'×'; pv.textContent=tr.pan<0?'L':tr.pan>0?'R':'C';
+      encode(tr);
+      tr.input.addEventListener('input',function(){ encode(tr); });
+      tr.togEl.addEventListener('click',function(){ tr.on=!tr.on; this.textContent=tr.on?'on':'off'; this.classList.toggle('off',!tr.on);
+        if(playing){ tr.on?startTrack(tr):(stopTrack(tr),hl(tr,-1)); } });
+      box.querySelector('.speed').addEventListener('input',function(){ tr.speed=parseInt(this.value,10)/100; sv.textContent=tr.speed.toFixed(2)+'×'; if(playing&&tr.on) startTrack(tr); });
+      box.querySelector('.pan').addEventListener('input',function(){ tr.pan=parseInt(this.value,10)/100; pv.textContent=tr.pan<-0.05?'L':tr.pan>0.05?'R':'C'; if(tr.panNode) tr.panNode.pan.setTargetAtTime(tr.pan,ctx.currentTime,0.01); });
+      box.querySelector('.vol').addEventListener('input',function(){ tr.vol=parseInt(this.value,10)/100; if(tr.gain) tr.gain.gain.setTargetAtTime(tr.vol,ctx.currentTime,0.01); });
+    });
   }
 
-  // ── layer toggles ──
-  function buildLayers(){ var L=document.getElementById("layers"); L.innerHTML="";
-    LAYERS.forEach(function(ly){ var row=document.createElement("div"); row.className="layer";
-      row.innerHTML='<span class="sw" style="background:'+ly.color+'"></span><span class="nm">'+ly.name+'<small>'+ly.sub+'</small></span><button class="tog" data-k="'+ly.key+'">on</button>';
-      L.appendChild(row); });
-    L.querySelectorAll(".tog").forEach(function(b){ b.onclick=function(){ var k=this.dataset.k; enabled[k]=!enabled[k];
-      this.textContent=enabled[k]?"on":"off"; this.classList.toggle("off",!enabled[k]); }; });
-  }
+  // ── master ──
+  function playAll(){ init(); resume(); if(playing){ stopAll(); return; } playing=true;
+    if(echo) echo.setBeat(60/tempo); TRACKS.forEach(buildChain); TRACKS.forEach(startTrack);
+    document.getElementById('play').innerHTML='<span>■</span> stop'; }
+  function stopAll(){ playing=false; TRACKS.forEach(function(tr){ stopTrack(tr); hl(tr,-1); }); document.getElementById('play').innerHTML='<span>▶</span> play all'; }
+  document.getElementById('play').addEventListener('click',playAll);
+  document.getElementById('tempo').addEventListener('input',function(){ tempo=parseInt(this.value,10); if(echo) echo.setBeat(60/tempo);
+    if(playing){ TRACKS.forEach(function(tr){ if(tr.on) startTrack(tr); }); } });
+  document.getElementById('echoBtn').addEventListener('click',function(){ echoOn=!echoOn; if(echo) echo.setOn(echoOn);
+    this.textContent='◎ ternary echo: '+(echoOn?'on':'off'); this.classList.toggle('off',!echoOn); });
+  // a slow ternary-echo rotation while playing (kept gentle)
+  setInterval(function(){ if(echo&&playing) echo.rotate(Math.floor(performance.now()/900)); }, 900);
 
-  document.getElementById("play").addEventListener("click",start);
-  document.getElementById("tempo").addEventListener("input",function(){ tempo=parseInt(this.value,10);
-    if(timer){ clearInterval(timer); timer=setInterval(tick,60000/tempo/4); } if(echo) echo.setBeat(60/tempo); });
-  document.getElementById("echoBtn").addEventListener("click",function(){ echoOn=!echoOn; if(echo) echo.setOn(echoOn);
-    this.textContent="◎ ternary echo: "+(echoOn?"on":"off"); this.classList.toggle("off",!echoOn); });
-  window.addEventListener("resize",fit);
-  fit(); buildLayers(); requestAnimationFrame(draw);
+  buildUI();
 })();
 </script>
 </body>
