@@ -63,7 +63,7 @@
 <div class="card">
   <div class="eyebrow">a purple-paper cipher · HERMES · ROOT0</div>
   <h1>The Procession</h1>
-  <p class="sub">Six voices, six windows, one clock — and each is a <b>different cipher</b>. Type a word into any box and it is enciphered in that voice's own way: the <b>lyre</b> turns letters into a pentatonic line; the <b>dùndún</b> reads it as gliding Yorùbá tones; the <b>bàtá</b> runs it through ẹ̀nà (the real vowel-echo cipher) and strikes it; the <b>two-tone drum</b> renders it as binary; the <b>ultrasonic</b> flings it past the hearing line as near-ultrasonic FSK; and the <b>keystroke</b> leaks it as key-clicks, each char at its own acoustic fingerprint (the side-channel). Give each its own word and its own speed, angle &amp; volume — then play them <b>together</b>: a layered cipher, split by sound and style, all through the ternary echo.</p>
+  <p class="sub">Seven voices, seven windows, one clock — and each is a <b>different cipher</b>. Type a word into any box and it is enciphered in that voice's own way: the <b>lyre</b> turns letters into a pentatonic line; the <b>dùndún</b> reads it as gliding Yorùbá tones; the <b>bàtá</b> runs it through ẹ̀nà (the real vowel-echo cipher) and strikes it; the <b>two-tone drum</b> renders it as binary; the <b>ultrasonic</b> flings it past the hearing line as near-ultrasonic FSK; the <b>keystroke</b> leaks it as key-clicks at each char's acoustic fingerprint (the side-channel); and the <b>fan</b> hums it off an air-gapped machine as blade-pass FSK. Give each its own word and its own speed, angle &amp; volume — then play them <b>together</b>: a layered cipher, split by sound and style, all through the ternary echo.</p>
 
   <div class="masterbar">
     <button class="play" id="play"><span>▶</span> play all</button>
@@ -74,7 +74,7 @@
   <div class="tracks" id="tracks"></div>
 
   <div class="note">
-    <b>what's real.</b> the bàtá's ẹ̀nà cipher (echo each vowel onto a 'g' syllable, copying its tone) is the documented Yorùbá language game; the dùndún reads real Yorùbá tone-marks (à=low · a=mid · á=high); the two-tone (binary) and three-tone (ternary) drums are the Kele &amp; Yorùbá talking-drum codes (Carrington/Gleick, Villepastour). standalone instruments: <a href="https://davidwise01.github.io/talking-drum/">two-tone</a> · <a href="https://davidwise01.github.io/talking-drum-dundun/">dùndún</a> · <a href="https://davidwise01.github.io/talking-drum-bata/">bàtá</a> · <a href="https://davidwise01.github.io/limen-sapphic-carrier/">Sapphic carrier</a> · <a href="https://davidwise01.github.io/cipher-ultrasonic/">ultrasonic</a> · <a href="https://davidwise01.github.io/cipher-steganography/">steganography</a> · <a href="https://davidwise01.github.io/cipher-side-channels/">side-channels</a>.
+    <b>what's real.</b> the bàtá's ẹ̀nà cipher (echo each vowel onto a 'g' syllable, copying its tone) is the documented Yorùbá language game; the dùndún reads real Yorùbá tone-marks (à=low · a=mid · á=high); the two-tone (binary) and three-tone (ternary) drums are the Kele &amp; Yorùbá talking-drum codes (Carrington/Gleick, Villepastour). standalone instruments: <a href="https://davidwise01.github.io/talking-drum/">two-tone</a> · <a href="https://davidwise01.github.io/talking-drum-dundun/">dùndún</a> · <a href="https://davidwise01.github.io/talking-drum-bata/">bàtá</a> · <a href="https://davidwise01.github.io/limen-sapphic-carrier/">Sapphic carrier</a> · <a href="https://davidwise01.github.io/cipher-ultrasonic/">ultrasonic</a> · <a href="https://davidwise01.github.io/cipher-steganography/">steganography</a> · <a href="https://davidwise01.github.io/cipher-side-channels/">side-channels</a> · <a href="https://davidwise01.github.io/cipher-air-gap/">air-gap</a>.
     <br><b>what's the system.</b> the letter→pitch and vowel→bit mappings, mixing four word-ciphers into one polyrhythmic groove, and the ternary echo (3 voices −/0/+) are ROOT0's composition — a study, not a transcribed ensemble. voices are live Web-Audio synthesis.
   </div>
 </div>
@@ -146,6 +146,16 @@
     for(var i=0;i<nd.length;i++) nd[i]=(Math.random()*2-1)*(1-i/nd.length);
     var ns=ctx.createBufferSource(); ns.buffer=nb; var hp=ctx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=2000;
     var ng=ctx.createGain(); ng.gain.value=0.18; ns.connect(hp).connect(ng).connect(dest); ns.start(t); ns.stop(t+0.01); }
+  // fan — a blade-pass tone (200/320 Hz) + harmonic riding a low whoosh; the air-gap exfil carrier
+  function fan(freq,t,dest){ var o=ctx.createOscillator(); o.type="sine"; o.frequency.value=freq;
+    var o2=ctx.createOscillator(); o2.type="sine"; o2.frequency.value=freq*2;
+    var g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.4,t+0.03); g.gain.exponentialRampToValueAtTime(0.0001,t+0.34);
+    var g2=ctx.createGain(); g2.gain.value=0.3; o.connect(g).connect(dest); o2.connect(g2); g2.connect(g); o.start(t); o2.start(t); o.stop(t+0.4); o2.stop(t+0.4);
+    var nb=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.34),ctx.sampleRate),nd=nb.getChannelData(0); var lpv=0;
+    for(var i=0;i<nd.length;i++){ var wv=Math.random()*2-1; lpv=lpv*0.86+wv*0.14; nd[i]=lpv*(1-i/nd.length); }
+    var ns=ctx.createBufferSource(); ns.buffer=nb; var nlp=ctx.createBiquadFilter(); nlp.type="lowpass"; nlp.frequency.value=freq*3;
+    var ng=ctx.createGain(); ng.gain.setValueAtTime(0.0001,t); ng.gain.linearRampToValueAtTime(0.22,t+0.03); ng.gain.exponentialRampToValueAtTime(0.0001,t+0.34);
+    ns.connect(nlp).connect(ng).connect(dest); ns.start(t); ns.stop(t+0.36); }
 
   // ── ciphers (one per voice) ──
   var PENTA=[220.00,261.63,293.66,329.63,392.00];
@@ -177,7 +187,10 @@
     leak:function(w){ var CH="abcdefghijklmnopqrstuvwxyz ", ev=[],strip=[]; var s=w.toLowerCase();
       for(var i=0;i<s.length;i++){ var ch=s[i], idx=CH.indexOf(ch); if(idx<0) continue;
         ev.push({freq:380+idx*150}); strip.push({glyph: ch===' '?'␣':ch, color:'#d07a4f'}); }
-      return {events:ev, strip:strip, readout:'key-clicks: <b>'+ev.length+'</b> keystrokes (char→fingerprint Hz)'}; }
+      return {events:ev, strip:strip, readout:'key-clicks: <b>'+ev.length+'</b> keystrokes (char→fingerprint Hz)'}; },
+    airgap:function(w){ var ev=[],strip=[],bits=''; for(var i=0;i<w.length;i++){ var ch=w[i]; if(!/[a-zà-ÿ]/i.test(ch)) continue;
+        var hi=isVowel(ch); ev.push({freq:hi?320:200}); bits+=hi?'1':'0'; strip.push({glyph:hi?'1':'0', color:hi?'#76b97e':'#3f6a44'}); }
+      return {events:ev, strip:strip, readout:'fan FSK: <b>'+(bits||'—')+'</b> (1700/2700 rpm → 200/320 Hz)'}; }
   };
   function mapTones(w){ var r=[]; for(var i=0;i<w.length;i++){ var ch=w[i]; if(!/[a-zà-ÿ]/i.test(ch)) continue; r.push(['L','M','H'][ch.toLowerCase().charCodeAt(0)%3]); } return r.length?r:['M']; }
 
@@ -188,7 +201,8 @@
     {key:'bata', name:'the Bàtá', style:'ẹ̀nà cipher · sharp fixed strokes', color:'#b24a78', word:'Ṣàngó', speed:1.5, pan:0.5, vol:0.7},
     {key:'drum', name:'the Two-Tone Drum', style:'binary · vowel 1 · consonant 0', color:'#9aa8c0', word:'limen', speed:0.5, pan:0.0, vol:0.8},
     {key:'ultra', name:'the Ultrasonic', style:'near-ultrasonic FSK · above the hearing line', color:'#5fb0c0', word:'witness', speed:1.25, pan:-0.7, vol:0.5},
-    {key:'leak', name:'the Keystroke', style:'acoustic side-channel · char → key-click', color:'#d07a4f', word:'the secret', speed:1.0, pan:0.6, vol:0.6}
+    {key:'leak', name:'the Keystroke', style:'acoustic side-channel · char → key-click', color:'#d07a4f', word:'the secret', speed:1.0, pan:0.6, vol:0.6},
+    {key:'airgap', name:'the Fan', style:'air-gap exfil · blade-pass FSK · the silent machine talks', color:'#76b97e', word:'exfiltrate', speed:0.5, pan:-0.25, vol:0.55}
   ];
   function buildChain(tr){ if(tr.gain) return; tr.gain=ctx.createGain(); tr.gain.gain.value=tr.vol;
     var pn=ctx.createStereoPanner?ctx.createStereoPanner():null; if(pn){ pn.pan.value=tr.pan; tr.gain.connect(pn); tr.panNode=pn; pn.connect(master); if(echo) pn.connect(echo.input); }
@@ -200,6 +214,7 @@
     else if(tr.key==='drum') drum(ev.high,t,dest);
     else if(tr.key==='ultra') ultra(ev.freq,t,dest);
     else if(tr.key==='leak') keyclick(ev.freq,t,dest);
+    else if(tr.key==='airgap') fan(ev.freq,t,dest);
     hl(tr, tr.ptr%tr.events.length); tr.ptr=(tr.ptr+1)%tr.events.length; }
   function trackMs(tr){ return (60/tempo/2)/Math.max(0.1,tr.speed)*1000; }   // 8th-note base ÷ speed
   function startTrack(tr){ stopTrack(tr); if(!tr.on||!tr.events.length) return; tr.ptr=0; tr.last=null; tr.timer=setInterval(function(){ playNote(tr); }, trackMs(tr)); }
